@@ -1,0 +1,2349 @@
+Create a new html file called index.html that I can publish to github pages with the following content
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Money Machine — How Software Gets Paid</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --ink: #1A1612;
+    --ink-light: #3D3530;
+    --ink-faint: #7A6F68;
+    --rust: #B84E2C;
+    --rust-light: #D4744F;
+    --gold: #C9A84C;
+    --gold-light: #E8D09A;
+    --sage: #4A6741;
+    --sage-light: #8EAD85;
+    --slate: #3C4E5E;
+    --rule: #D4C9BC;
+    --bg-aside: #F2EDE5;
+    --bg-callout: #EEF3ED;
+    --bg-dark: #1E1A16;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--rust);
+    z-index: 999;
+    transition: width 0.1s linear;
+  }
+
+  /* COVER */
+  .cover {
+    background: var(--bg-dark);
+    color: var(--cream);
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover-texture {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(201,168,76,0.03) 80px, rgba(201,168,76,0.03) 81px);
+    pointer-events: none;
+  }
+
+  .cover-accent {
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle at center, rgba(184,78,44,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .issue-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .issue-label::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .cover-kicker {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust-light);
+    margin-bottom: 1rem;
+  }
+
+  .cover-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 1.0;
+    margin-bottom: 1.5rem;
+    color: var(--cream);
+  }
+  .cover-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .cover-deck {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(250,247,242,0.75);
+    max-width: 620px;
+    margin-bottom: 3rem;
+    font-style: italic;
+  }
+
+  .cover-scroll-hint {
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .scroll-arrow {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+    margin: 0 auto;
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ARTICLE LAYOUT */
+  .article {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* SECTIONS */
+  .chapter {
+    margin: 0 auto;
+    padding: 5rem 0;
+    position: relative;
+  }
+
+  /* LEDE */
+  .lede {
+    max-width: 720px;
+    margin: 6rem auto 0;
+    padding: 0 1.5rem;
+  }
+  .lede p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 5.5rem;
+    font-weight: 900;
+    float: left;
+    line-height: 0.8;
+    margin: 0.1em 0.08em 0 0;
+    color: var(--rust);
+  }
+  .lede p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--ink);
+    margin-bottom: 1.4em;
+  }
+  .lede p strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* CHAPTER HEADER */
+  .chapter-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 2rem;
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+  .chapter-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .chapter-title-group {
+    padding-top: 0.8rem;
+    border-top: 2px solid var(--rust);
+  }
+  .chapter-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.4rem;
+  }
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .chapter-subtitle {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--ink-faint);
+    margin-top: 0.4rem;
+  }
+
+  /* BODY TEXT */
+  .body-text {
+    max-width: 680px;
+  }
+  .body-text p {
+    font-size: 1.05rem;
+    line-height: 1.82;
+    color: var(--ink-light);
+    margin-bottom: 1.4em;
+  }
+  .body-text p strong { font-weight: 600; color: var(--ink); }
+  .body-text p em { color: var(--ink); }
+  .body-text a {
+    color: var(--rust);
+    text-decoration: underline;
+    text-decoration-color: var(--rust-light);
+    text-underline-offset: 2px;
+  }
+  .body-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  /* TWO COLUMN LAYOUT */
+  .two-col {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin: 3rem 0;
+  }
+  .two-col.flipped { grid-template-columns: 1fr 2fr; }
+  @media (max-width: 768px) {
+    .two-col, .two-col.flipped { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    position: relative;
+    padding: 2rem 2rem 2rem 2.5rem;
+    border-left: 3px solid var(--rust);
+  }
+  .pull-quote::before {
+    content: '\201C';
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem;
+    color: var(--gold-light);
+    position: absolute;
+    top: -1.5rem;
+    left: 0.5rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .pull-quote p {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+    position: relative;
+    z-index: 1;
+  }
+  .pull-quote cite {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-style: normal;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 1rem;
+  }
+
+  /* ASIDE / EXPLAINER BOX */
+  .aside-box {
+    background: var(--bg-aside);
+    border: 1px solid var(--rule);
+    padding: 2rem;
+    border-radius: 2px;
+    margin: 2rem 0;
+  }
+  .aside-box .aside-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .aside-box .aside-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--rust);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .aside-box h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .aside-box p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink-light);
+    margin-bottom: 0.75em;
+  }
+  .aside-box p:last-child { margin-bottom: 0; }
+
+  /* DIAGRAM BOXES */
+  .diagram {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3rem;
+    margin: 3rem 0;
+    border-radius: 2px;
+    position: relative;
+    isolation: isolate; /* fixes z-index stacking context for ::before */
+  }
+  .diagram::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 2px;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Explicit overrides for timeline inside dark diagram/full-bleed boxes */
+  .diagram .timeline-event,
+  .full-bleed .timeline-event {
+    color: var(--cream);
+  }
+  .diagram .timeline-year,
+  .full-bleed .timeline-year {
+    color: var(--gold);
+  }
+  .diagram .timeline-detail,
+  .full-bleed .timeline-detail {
+    color: rgba(250,247,242,0.55);
+  }
+  .diagram .timeline::before,
+  .full-bleed .timeline::before {
+    background: rgba(255,255,255,0.15);
+  }
+  .diagram .timeline-item::before,
+  .full-bleed .timeline-item::before {
+    border-color: var(--gold);
+    background: transparent;
+  }
+  .diagram .timeline-item.highlight::before,
+  .full-bleed .timeline-item.highlight::before {
+    background: var(--gold);
+  }
+
+  .diagram-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .diagram-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    align-items: stretch;
+  }
+  .flow-step {
+    flex: 1;
+    min-width: 100px;
+    padding: 1.25rem 1rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    text-align: center;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .flow-step:hover { background: rgba(255,255,255,0.1); }
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1.1rem;
+    z-index: 2;
+  }
+  .flow-step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .flow-step-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+  .flow-step-detail {
+    font-size: 0.7rem;
+    color: rgba(250,247,242,0.5);
+    line-height: 1.4;
+  }
+
+  /* Table scroll wrapper */
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* Tier table */
+  .tier-table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  .tier-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: left;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .tier-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: rgba(250,247,242,0.85);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .tier-table tr:hover td { background: rgba(255,255,255,0.04); }
+  .tier-table td:first-child {
+    font-weight: 600;
+    color: var(--cream);
+    white-space: nowrap;
+  }
+  .tier-table .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+  .tag-green { background: rgba(78,139,71,0.3); color: #8EAD85; }
+  .tag-amber { background: rgba(201,168,76,0.2); color: var(--gold); }
+  .tag-red   { background: rgba(184,78,44,0.25); color: var(--rust-light); }
+
+  /* METRICS DISPLAY */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+  }
+  .metric-card {
+    background: var(--bg-aside);
+    border: 1px solid var(--rule);
+    padding: 1.5rem;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--rust);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .metric-card:hover::after { transform: scaleX(1); }
+  .metric-abbr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 0.4rem;
+  }
+  .metric-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+  .metric-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--slate);
+    background: rgba(60,78,94,0.08);
+    padding: 0.4rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+  .metric-desc {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    line-height: 1.55;
+  }
+  .metric-benchmark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--sage);
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* PLATFORM LANDSCAPE */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .platform-card {
+    border: 1px solid var(--rule);
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border-radius: 2px;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .platform-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+  .platform-category {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+  .platform-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .platform-desc {
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .platform-tier {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    margin-top: 0.6rem;
+  }
+  .tier-smb        { background: rgba(78,139,71,0.1);  color: var(--sage);       border: 1px solid rgba(78,139,71,0.2); }
+  .tier-enterprise { background: rgba(60,78,94,0.1);   color: var(--slate);      border: 1px solid rgba(60,78,94,0.2); }
+  .tier-devfirst   { background: rgba(201,168,76,0.1); color: #8A6F1A;            border: 1px solid rgba(201,168,76,0.2); }
+  .tier-specialized{ background: rgba(184,78,44,0.1);  color: var(--rust);       border: 1px solid rgba(184,78,44,0.2); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--rule);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.1rem;
+    top: 0.3rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid var(--rust);
+    box-sizing: border-box;
+  }
+  .timeline-item.highlight::before {
+    background: var(--rust);
+  }
+  .timeline-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--rust);
+    margin-bottom: 0.15rem;
+    line-height: 1.2;
+  }
+  .timeline-event {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink); /* default for light backgrounds */
+    margin-bottom: 0.2rem;
+    line-height: 1.25;
+  }
+  .timeline-detail {
+    font-size: 0.83rem;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+
+  /* Aside-box timelines on light background keep default dark color */
+  .aside-box .timeline-event  { color: var(--ink); }
+  .aside-box .timeline-detail { color: var(--ink-faint); }
+  .aside-box .timeline-year   { color: var(--rust); }
+  .aside-box .timeline-item::before { border-color: var(--rust); }
+  .aside-box .timeline-item.highlight::before { background: var(--rust); }
+  .aside-box .timeline::before { background: var(--rule); }
+
+  /* SECTION DIVIDER */
+  .section-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 5rem 0;
+  }
+  .section-rule::before, .section-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+  .section-rule-ornament {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--bg-callout);
+    border: 1px solid rgba(74,103,65,0.2);
+    border-left: 3px solid var(--sage);
+    padding: 1.75rem 2rem;
+    margin: 2rem 0;
+    border-radius: 0 2px 2px 0;
+  }
+  .callout-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.5rem;
+  }
+  .callout p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    line-height: 1.7;
+    margin-bottom: 0.6em;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout strong { color: var(--ink); font-weight: 600; }
+
+  /* FULL BLEED */
+  .full-bleed {
+    background: var(--bg-dark);
+    color: var(--cream);
+    padding: 5rem 2rem;
+    margin: 5rem 0;
+  }
+  .full-bleed-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .full-bleed h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+  }
+  .full-bleed h2 em { font-style: italic; color: var(--gold); }
+  .full-bleed .sub {
+    font-size: 0.95rem;
+    color: rgba(250,247,242,0.55);
+    font-style: italic;
+    margin-bottom: 3rem;
+  }
+
+  /* ANNOTATION MARKER */
+  .annotation-marker {
+    display: inline-block;
+    width: 18px; height: 18px;
+    background: var(--rust);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    font-weight: 500;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    vertical-align: super;
+    cursor: help;
+    margin-left: 2px;
+  }
+
+  /* BIG NUMBER */
+  .big-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--rust);
+    line-height: 1;
+    display: block;
+  }
+  .big-number-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: 0.2rem;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2rem;
+    margin: 2.5rem 0;
+    padding: 2rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat-item { text-align: center; }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--rust);
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.4rem;
+    display: block;
+    line-height: 1.4;
+  }
+
+  /* STAGE NAV DOTS */
+  .stage-nav {
+    position: fixed;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 50;
+  }
+  .stage-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rule);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .stage-dot.active { background: var(--rust); transform: scale(1.3); }
+  @media (max-width: 768px) { .stage-nav { display: none; } }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg-dark);
+    color: rgba(250,247,242,0.5);
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  footer .footer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+  footer p {
+    font-size: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+  }
+
+  /* FULL BLEED TWO COL */
+  .full-bleed-two-col {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .full-bleed-two-col { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    html { font-size: 16px; }
+
+    .cover-inner { padding: 5rem 1.25rem 3rem; }
+    .cover-headline { font-size: clamp(2.8rem, 12vw, 4.5rem); }
+    .cover-deck { font-size: 1rem; }
+
+    .lede { padding: 0 1.25rem; margin-top: 3.5rem; }
+    .lede p:first-child::first-letter { font-size: 4rem; }
+
+    .article { padding: 0 1.25rem; }
+
+    .chapter-header { grid-template-columns: 1fr; gap: 0.75rem; }
+    .chapter-number { font-size: 2.5rem; line-height: 1; margin-bottom: 0; }
+    .chapter-title { font-size: 1.5rem; }
+
+    .two-col,
+    .two-col.flipped { grid-template-columns: 1fr; gap: 2rem; }
+
+    /* Flow diagram: vertical stack on mobile */
+    .flow { flex-direction: column; gap: 0; }
+    .flow-step {
+      min-width: unset;
+      width: 100%;
+      padding: 1rem;
+    }
+    /* Remove absolute arrow, replace with block arrow below each step */
+    .flow-step:not(:last-child)::after {
+      content: '↓';
+      position: static;
+      display: block;
+      transform: none;
+      text-align: center;
+      color: var(--gold);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      right: auto;
+    }
+
+    .diagram { padding: 1.5rem 1rem; }
+    .tier-table { font-size: 0.78rem; }
+    .tier-table th, .tier-table td { padding: 0.6rem 0.5rem; }
+    /* Hide "Watch out for" column on small screens */
+    .tier-table th:last-child,
+    .tier-table td:last-child { display: none; }
+
+    .full-bleed { padding: 3rem 1.25rem; margin: 3rem 0; }
+
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 1.25rem; padding: 1.5rem 0; }
+    .stat-value { font-size: 1.8rem; }
+
+    .metrics-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .platform-grid { grid-template-columns: 1fr; }
+
+    .full-bleed .aside-box { margin-top: 2rem; }
+
+    .pull-quote { padding: 1.5rem 1.25rem 1.5rem 1.75rem; }
+    .pull-quote::before { font-size: 4rem; top: -1rem; left: 0.2rem; }
+    .pull-quote p { font-size: 1.05rem; }
+
+    .aside-box { padding: 1.5rem 1.25rem; }
+    .section-rule { margin: 3rem 0; }
+    .chapter { padding: 3rem 0; }
+  }
+
+  @media (max-width: 420px) {
+    .cover-headline { font-size: 2.6rem; }
+    .stats-row { grid-template-columns: 1fr; }
+    /* Hide "Best for" column on very small screens */
+    .tier-table th:nth-child(3),
+    .tier-table td:nth-child(3) { display: none; }
+  }
+
+  /* SMOOTH REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Code-like inline */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: rgba(60,78,94,0.08);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+    color: var(--slate);
+  }
+
+  /* Landscape visual accent */
+  .visual-rule {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rust), transparent);
+    margin: 3rem 0;
+    opacity: 0.4;
+  }
+
+  /* READING TIME BADGE */
+  .cover-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .cover-byline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: rgba(250,247,242,0.4);
+    text-transform: uppercase;
+  }
+  .reading-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+  }
+  .reading-time svg {
+    width: 12px; height: 12px;
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    flex-shrink: 0;
+  }
+  .listen-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(250,247,242,0.6);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .listen-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--cream);
+    border-color: rgba(255,255,255,0.3);
+  }
+  .listen-btn svg {
+    width: 12px; height: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    flex-shrink: 0;
+  }
+  .listen-btn.active svg {
+    fill: currentColor;
+  }
+  .listen-btn.no-tts {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* AUDIO PLAYER */
+  #audio-player {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    z-index: 200;
+    background: var(--bg-dark);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 0.9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 280px;
+    max-width: calc(100vw - 3rem);
+  }
+  #audio-player.visible {
+    transform: translateX(-50%) translateY(0);
+  }
+  .ap-play-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--rust);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .ap-play-btn:hover { background: var(--rust-light); transform: scale(1.05); }
+  .ap-play-btn:active { transform: scale(0.95); }
+  .ap-play-btn svg { width: 14px; height: 14px; fill: white; stroke: none; }
+  .ap-info { flex: 1; min-width: 0; }
+  .ap-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ap-progress-bar {
+    height: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+  }
+  .ap-progress-fill {
+    height: 100%;
+    background: var(--rust);
+    width: 0%;
+    transition: width 0.5s linear;
+    border-radius: 1px;
+  }
+  .ap-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: rgba(250,247,242,0.35);
+    letter-spacing: 0.06em;
+  }
+  .ap-speed-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: rgba(250,247,242,0.45);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.15s, background 0.15s;
+  }
+  .ap-speed-btn:hover { color: var(--cream); background: rgba(255,255,255,0.1); }
+  .ap-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(250,247,242,0.3);
+    padding: 0.2rem;
+    flex-shrink: 0;
+    transition: color 0.15s;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .ap-close-btn:hover { color: rgba(250,247,242,0.7); }
+
+  /* DEEP LINK ANCHORS */
+  .anchor-target { position: relative; scroll-margin-top: 2rem; }
+  .anchor-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    margin-left: 0.5rem;
+    opacity: 0;
+    color: var(--rust);
+    text-decoration: none;
+    vertical-align: middle;
+    border-radius: 3px;
+    transition: opacity 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .anchor-link svg {
+    width: 13px; height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .anchor-target:hover .anchor-link,
+  .anchor-target:focus-within .anchor-link { opacity: 1; }
+  .anchor-link:hover { opacity: 1; background: rgba(184,78,44,0.1); }
+  .anchor-link.copied { opacity: 1; color: var(--sage); }
+
+  .chapter-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .chapter-title-row .chapter-title { flex: 1; }
+
+  .linkable-header {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 0.75rem;
+  }
+  .linkable-header h4 { flex: 1; margin-bottom: 0; }
+
+  @keyframes anchorFlash {
+    0%   { outline: 2px solid rgba(184,78,44,0);   background: rgba(184,78,44,0); }
+    20%  { outline: 2px solid rgba(184,78,44,0.4); background: rgba(184,78,44,0.06); }
+    100% { outline: 2px solid rgba(184,78,44,0);   background: rgba(184,78,44,0); }
+  }
+  .anchor-flash {
+    animation: anchorFlash 1.2s ease forwards;
+    border-radius: 3px;
+  }
+
+  .reading-highlight {
+    background: rgba(184,78,44,0.12);
+    border-radius: 2px;
+    transition: background 0.3s;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="stage-nav" id="stageNav" aria-label="Section navigation">
+  <div class="stage-dot active" data-section="cover" title="Cover"></div>
+  <div class="stage-dot" data-section="ch1" title="I. The Problem"></div>
+  <div class="stage-dot" data-section="ch2" title="II. Licensing"></div>
+  <div class="stage-dot" data-section="ch3" title="III. The Pipeline"></div>
+  <div class="stage-dot" data-section="ch4" title="IV. Metering"></div>
+  <div class="stage-dot" data-section="ch5" title="V. Accounting"></div>
+  <div class="stage-dot" data-section="ch6" title="VI. Metrics"></div>
+  <div class="stage-dot" data-section="ch7" title="VII. Tax"></div>
+  <div class="stage-dot" data-section="ch8" title="VIII. Platforms"></div>
+  <div class="stage-dot" data-section="ch9" title="IX. Futures"></div>
+</nav>
+
+<!-- ===================== COVER ===================== -->
+<section class="cover" id="cover">
+  <div class="cover-texture" aria-hidden="true"></div>
+  <div class="cover-accent" aria-hidden="true"></div>
+  <div class="cover-inner">
+    <div class="issue-label">A Technical Masterclass in Software Monetization</div>
+    <p class="cover-kicker">From first principles to frontier models</p>
+    <h1 class="cover-headline">The <em>Money</em><br>Machine</h1>
+    <p class="cover-deck">Every time you swipe a credit card for software, a vast invisible infrastructure springs into action — configuring prices, metering consumption, recognizing revenue, remitting taxes to forty nations. This is the hidden craft that turns code into commerce. Here is how it works.</p>
+    <div class="cover-meta">
+      <div class="cover-byline">A deep dive for software engineers · 2025–2026</div>
+      <div class="reading-time" title="Based on 220 words per minute">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        22 min read
+      </div>
+      <button class="listen-btn" id="listenBtn" onclick="toggleAudio()" aria-label="Listen to article">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+        Listen
+      </button>
+    </div>
+  </div>
+  <div class="cover-scroll-hint" aria-hidden="true"><div class="scroll-arrow"></div></div>
+</section>
+
+<!-- ===================== LEDE ===================== -->
+<div class="lede" id="lede">
+  <p>Imagine you are a software engineer at a startup. Your team has just shipped a product people love. Usage is climbing. Then your co-founder sends a Slack message that changes everything: <em>"Sales wants us to start doing enterprise deals. We need proper billing."</em></p>
+  <p>You open a browser tab. You search "subscription billing." You find seventeen platforms, each claiming to do everything. You close the tab. You open a spreadsheet. Within three months, the spreadsheet has grown to 4,000 rows, has broken twice, has caused two customers to be billed incorrectly, and has consumed a quarter of your engineering capacity.</p>
+  <p>This is a story almost every software company lives through. It is the moment they discover that billing is not a feature. It is a discipline — one with its own vocabulary, its own accounting standards, its own regulatory landscape, and its own set of hard engineering problems. It connects your product, your sales team, your finance department, and the tax authorities of a dozen countries into a single, fragile chain.</p>
+  <p>Understanding it is, increasingly, a basic competency for any engineer building software that charges money. This article is a map of that territory: its concepts, its craft, its tools, and where it is all heading.</p>
+</div>
+
+<div class="article">
+
+<!-- ===================== CHAPTER 1 ===================== -->
+<section class="chapter" id="ch1">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">I</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">The Fundamental Problem</div>
+      <h2 class="chapter-title">You Built a Thing. Now Someone Has to Pay for It.</h2>
+      <p class="chapter-subtitle">Why billing is harder than it looks, and why every company eventually discovers this the hard way.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="body-text reveal">
+      <p>In the early days of commercial software, billing was simple. You bought a box at a store. The box had a disk. You installed the software. It ran. The transaction was over. This was called a <strong>perpetual license</strong>, and it had the clean, satisfying logic of buying a toaster.</p>
+      <p>The internet complicated this. Suddenly software lived in data centers, not on disks. It received updates continuously. It could be turned off if you stopped paying. The toaster had become a subscription to electricity — and the billing had to change with it.</p>
+      <p>Then things got more complicated still. Companies discovered that the amount of value a customer got from software varied enormously — a tiny startup using five seats wasn't getting the same value as a Fortune 500 using five thousand. Seat-based pricing started to feel blunt. And now, with AI, the model is shifting again: a single AI agent can do the work of many humans, making seats irrelevant as a unit of measure altogether.</p>
+      <p>Each of these transitions required new infrastructure, new contracts, new accounting treatments, and new mental models. The industry has been playing catch-up ever since.</p>
+      <p>The person who tends to discover this first is the engineer. They are asked to "add billing," and they discover that billing is not a module. It is a system that spans the entire company.</p>
+    </div>
+    <div>
+      <div class="pull-quote reveal">
+        <p>Billing is where product meets finance meets law meets engineering. It is the place where all of a company's promises — to customers, to investors, to tax authorities — are finally made concrete.</p>
+        <cite>An observation that appears in every billing project, eventually</cite>
+      </div>
+      <div class="aside-box reveal" id="aside-three-eras" style="margin-top: 1.5rem;">
+        <div class="aside-label">The Three Eras</div>
+        <h4>How We Got Here</h4>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1980s–1990s</div>
+            <div class="timeline-event">Perpetual Licenses</div>
+            <div class="timeline-detail">Buy once, own forever. Simple. Clean. Terrible for recurring revenue.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2000s–2010s</div>
+            <div class="timeline-event">SaaS Subscriptions</div>
+            <div class="timeline-detail">Per-seat, recurring. Salesforce proves the model. ARR becomes the metric that matters.</div>
+          </div>
+          <div class="timeline-item highlight">
+            <div class="timeline-year">2015–now</div>
+            <div class="timeline-event">Usage &amp; Outcome</div>
+            <div class="timeline-detail">Pay for what you consume. AWS demonstrates planetary scale. AI accelerates the shift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 2 ===================== -->
+<section class="chapter" id="ch2">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">II</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">Licensing Models</div>
+      <h2 class="chapter-title">The Many Ways to Sell the Same Thing</h2>
+      <p class="chapter-subtitle">A taxonomy of how software is licensed, and why the choice is never purely technical.</p>
+    </div>
+  </div>
+
+  <div class="body-text reveal">
+    <p>A license is a legal permission to use software under specified conditions. The <em>model</em> is the commercial logic built around that permission: who pays how much, for how long, for what. The model you choose shapes everything downstream — your revenue recognition, your sales motion, your customer relationship, and your engineering requirements.</p>
+    <p>There is no universally correct model. There is only the right model for your product, your customers, and the kind of value you deliver.</p>
+  </div>
+
+  <div class="diagram reveal">
+    <div class="diagram-label">Reference Table</div>
+    <div class="diagram-title">The Licensing Model Landscape</div>
+    <div class="table-scroll">
+      <table class="tier-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>How it works</th>
+            <th>Best for</th>
+            <th>Watch out for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Perpetual <span class="tag tag-amber">Legacy</span></td>
+            <td>One-time purchase; own forever. Often sold with annual maintenance (10–20% of license value).</td>
+            <td>On-prem, IoT, regulated industries preferring CapEx over OpEx.</td>
+            <td>No recurring revenue; must release new versions to generate more sales.</td>
+          </tr>
+          <tr>
+            <td>Subscription / SaaS <span class="tag tag-green">Dominant</span></td>
+            <td>Recurring fee (monthly/annual) for access. Includes updates, support, hosting.</td>
+            <td>Cloud software. Almost all modern SaaS starts here.</td>
+            <td>Revenue tied to renewals; churn is the enemy.</td>
+          </tr>
+          <tr>
+            <td>Per-Seat / Named User</td>
+            <td>Each user who signs in needs a license. Price scales linearly with headcount.</td>
+            <td>Collaboration tools, CRMs, productivity software.</td>
+            <td>Breaks down when AI agents replace human seats. Under pressure.</td>
+          </tr>
+          <tr>
+            <td>Floating / Concurrent</td>
+            <td>A pool of licenses shared among more users than there are licenses. Managed by a license server.</td>
+            <td>Engineering tools, legacy enterprise. When not everyone uses the software simultaneously.</td>
+            <td>Requires always-on license server; complex to manage at scale.</td>
+          </tr>
+          <tr>
+            <td>Usage-Based <span class="tag tag-green">Rising</span></td>
+            <td>Pay for what you consume. Metrics: API calls, compute hours, tokens, transactions, GB stored.</td>
+            <td>Infrastructure, AI APIs, anything with variable consumption patterns.</td>
+            <td>Revenue becomes variable; harder to forecast; needs metering infrastructure.</td>
+          </tr>
+          <tr>
+            <td>Credits / Tokens</td>
+            <td>Pre-purchase a bucket of credits, spend down over time. Common in AI (OpenAI, Anthropic).</td>
+            <td>AI services with volatile compute costs; when you want upfront cash and customer spend control.</td>
+            <td>"Credits" are often opaque to buyers. Requires clear rate tables.</td>
+          </tr>
+          <tr>
+            <td>Outcome-Based <span class="tag tag-amber">Emerging</span></td>
+            <td>Pay per measurable result: per resolved ticket, per lead generated, per completed workflow.</td>
+            <td>AI agents, automation platforms where results are unambiguous and attributable.</td>
+            <td>Hard to execute: requires clear outcomes, short attribution windows, willingness to absorb cost variance.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top:3rem;">
+    <div class="body-text">
+      <p>The history of Adobe illustrates why these choices matter so much. For decades, Photoshop was perpetually licensed. By the time Creative Cloud launched in 2012, a boxed copy cost nearly a thousand dollars — a price that locked out everyone except professionals, while free alternatives grew. Adobe's switch to subscription was traumatic for customers but transformative for the business: it created a recurring revenue stream, enabled continuous improvement, and made the product accessible to an entirely new market.</p>
+      <p>Microsoft followed a similar path with Office. Both companies discovered the same truth: <strong>the model you choose is not just a pricing decision, it is a statement about your relationship with customers</strong> and about what kind of business you are building.</p>
+      <p>The emerging question for the current decade is simpler to state but harder to answer: <em>what replaces the seat when AI agents do the work of people?</em> Salesforce is already wrestling with this. Their Agentforce platform can run thousands of AI workflows simultaneously — none of them "users" in any traditional sense. The industry is beginning to answer: you price on activities, tasks, or outcomes, not on human headcount.</p>
+    </div>
+    <div>
+      <div class="aside-box reveal" id="aside-entitlement">
+        <h4>What an Entitlement Actually Controls</h4>
+        <p>Behind every license is an <strong>entitlement</strong> — a set of permissions enforced in real-time as customers use your software.</p>
+        <p>A well-designed entitlement system controls:</p>
+        <p><strong>What:</strong> Which features, modules, and API endpoints are accessible.</p>
+        <p><strong>How much:</strong> Usage quotas, rate limits, seat counts.</p>
+        <p><strong>Until when:</strong> Expiration dates, trial windows, renewal terms.</p>
+        <p><strong>Where:</strong> Geographic restrictions, device limits.</p>
+        <p>The architectural principle that matters: <em>decouple entitlements from code</em>. When pricing changes — new tier, new feature, new limit — you want to update a dashboard, not deploy a code change.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 3 ===================== -->
+<section class="chapter" id="ch3">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">III</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">The Full Pipeline</div>
+      <h2 class="chapter-title">Quote-to-Cash: The Anatomy of a Sale</h2>
+      <p class="chapter-subtitle">The eight stages that transform a customer conversation into recognized revenue.</p>
+    </div>
+  </div>
+
+  <div class="body-text reveal">
+    <p>The industry has a name for the entire lifecycle of a sale, from first contact to money in the bank: <strong>Quote-to-Cash</strong>, or Q2C. It is a deceptively simple phrase for a process that touches every department in a company and breaks spectacularly when any link in the chain is weak.</p>
+    <p>Think of it as a relay race. The baton passes from sales to legal to operations to finance — and if anyone drops it, the customer notices, the revenue stalls, and the post-mortem is painful.</p>
+  </div>
+
+  <div class="diagram reveal" style="margin: 2.5rem 0;">
+    <div class="diagram-label">Process Architecture</div>
+    <div class="diagram-title">The Quote-to-Cash Pipeline</div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 1</div>
+        <div class="flow-step-name">Configure</div>
+        <div class="flow-step-detail">Define what the customer is buying. Products, quantities, options.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 2</div>
+        <div class="flow-step-name">Price</div>
+        <div class="flow-step-detail">Apply pricing rules, tiers, discounts, and approvals.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 3</div>
+        <div class="flow-step-name">Quote</div>
+        <div class="flow-step-detail">Generate a formal proposal. Route for legal and executive sign-off.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 4</div>
+        <div class="flow-step-name">Contract</div>
+        <div class="flow-step-detail">Negotiate and execute. Contract becomes the source of billing truth.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 5</div>
+        <div class="flow-step-name">Fulfill</div>
+        <div class="flow-step-detail">Provision access. Activate entitlements. Start metering usage.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 6</div>
+        <div class="flow-step-name">Invoice</div>
+        <div class="flow-step-detail">Calculate charges. Apply taxes. Send itemized invoice.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 7</div>
+        <div class="flow-step-name">Collect</div>
+        <div class="flow-step-detail">Process payment. Handle failures. Run dunning if needed.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-label">Stage 8</div>
+        <div class="flow-step-name">Recognize</div>
+        <div class="flow-step-detail">Record revenue per GAAP/IFRS. Feed metrics. Close the books.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top: 3rem;">
+    <div class="body-text">
+      <h3>Where Things Break</h3>
+      <p>In theory, this pipeline is clean. In practice, it fragments. Sales uses Salesforce. Finance uses NetSuite. The billing system is something the engineering team built three years ago and no one fully understands. Contracts are in DocuSign but not systematically parsed. Usage data lives in a data warehouse that no one in finance can query.</p>
+      <p>The result: the person who closes the deal doesn't know what the customer will actually be billed. The person generating the invoice doesn't know what was promised in the contract. The person recognizing revenue doesn't know which deliverables have been satisfied. Everyone is working from a different version of the truth.</p>
+      <p>A McKinsey study found that streamlining Q2C processes can yield <strong>50% reductions in back-office time, 10% improvements in deal margins, and 15-point gains in customer satisfaction</strong>. The upside is real. So is the investment required.</p>
+      <p>The front half of Q2C — configure, price, quote — has its own name and tooling: <strong>CPQ</strong> (Configure, Price, Quote). CPQ software exists to eliminate the moment when a sales rep opens a spreadsheet to build a quote, gets the pricing wrong, and creates problems that follow the deal for its entire lifetime.</p>
+    </div>
+    <div>
+      <div class="aside-box reveal" id="aside-cpq">
+        <div class="aside-label">Key Concept</div>
+        <h4>CPQ: The Front of the Pipeline</h4>
+        <p>CPQ software exists to solve one problem: <em>pricing complexity at the speed of sales</em>.</p>
+        <p>A sales rep should never need to know whether a given product combination is valid, what discount threshold requires VP approval, or how volume pricing interacts with multi-year commitments. CPQ encodes all of that logic and makes it invisible.</p>
+        <p>The CPQ market is growing from $2.5B (2023) to a projected $7.3B by 2030 — a measure of how badly this problem needs solving.</p>
+        <p><strong>Common players:</strong> Salesforce Revenue Cloud, Oracle CPQ, DealHub, Subskribe, Conga.</p>
+      </div>
+      <div class="callout reveal" id="callout-proration" style="margin-top:1.5rem;">
+        <div class="callout-label">The Term to Know</div>
+        <p><strong>Proration</strong> is what happens when a customer changes their plan mid-billing-period. If they upgrade on day 15 of a 30-day cycle, they owe half a period at the old rate and half at the new. Simple in theory. The engineering edge cases are numerous.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /article -->
+
+<!-- ===================== CHAPTER 4 — FULL BLEED ===================== -->
+<div class="full-bleed" id="ch4">
+  <div class="full-bleed-inner">
+    <div class="chapter-header reveal">
+      <div class="chapter-number" style="color:rgba(250,247,242,0.2);">IV</div>
+      <div class="chapter-title-group" style="border-top-color: var(--gold);">
+        <div class="chapter-kicker" style="color:var(--gold);">Usage Metering</div>
+        <h2 class="chapter-title" style="color:var(--cream);">The New Infrastructure Layer Nobody Told You About</h2>
+        <p class="chapter-subtitle" style="color:rgba(250,247,242,0.5);">When pricing moves from seats to consumption, engineering has to build an entirely new kind of system.</p>
+      </div>
+    </div>
+
+    <div class="full-bleed-two-col">
+      <div class="body-text reveal">
+        <p style="color:rgba(250,247,242,0.8);">Here is the problem nobody tells you about usage-based pricing: <strong style="color:var(--cream);">measuring usage, correctly, at scale, is its own engineering domain</strong>.</p>
+        <p style="color:rgba(250,247,242,0.8);">When a customer makes an API call, your system emits an event. Simple enough. But at a company like Snowflake or Twilio, millions of these events are happening every second, from customers in dozens of countries, billed in different currencies, under contracts with different rate structures, some of which include volume discounts that only apply to certain product lines during certain periods.</p>
+        <p style="color:rgba(250,247,242,0.8);">Every event has to be ingested reliably (no loss), deduplicated (no double-counting), aggregated correctly (applying the right pricing rule to the right customer under the right contract), and converted into a line item on an invoice that the customer can verify and won't dispute.</p>
+        <p style="color:rgba(250,247,242,0.8);">If you get this wrong, you either undercharge (leaving money on the table — industry research suggests 1–3% of revenue leaks this way) or you overcharge (destroying trust, triggering disputes, and potentially losing the customer).</p>
+        <p style="color:rgba(250,247,242,0.8);">This is why a category of specialized metering infrastructure has emerged. It does not replace your billing system. It sits between your product and your billing system, doing the hard work of event collection, aggregation, and rating.</p>
+      </div>
+      <div>
+        <div class="aside-box reveal" id="aside-metering-stack" style="background:rgba(250,247,242,0.06);border-color:rgba(250,247,242,0.1);">
+          <div class="aside-label" style="color:var(--gold);">The Metering Stack</div>
+          <h4 style="color:var(--cream);">Five Layers</h4>
+          <div class="timeline" style="--rule-color:rgba(250,247,242,0.15);">
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 1</div>
+              <div class="timeline-event">Instrumentation</div>
+              <div class="timeline-detail">Product emits usage events — what happened, who did it, when, and how much.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 2</div>
+              <div class="timeline-event">Event Ingestion</div>
+              <div class="timeline-detail">High-throughput pipeline. Handles idempotency, deduplication, late-arriving events.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 3</div>
+              <div class="timeline-event">Aggregation</div>
+              <div class="timeline-detail">Raw events → billable quantities. Applies tiering, volume rules, rollover logic.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">Layer 4</div>
+              <div class="timeline-event">Rating</div>
+              <div class="timeline-detail">Quantity × price, respecting contract terms, discounts, commitments.</div>
+            </div>
+            <div class="timeline-item highlight">
+              <div class="timeline-year">Layer 5</div>
+              <div class="timeline-event">Entitlement Enforcement</div>
+              <div class="timeline-detail">Real-time: can this customer do this right now? Soft warning vs. hard block.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row reveal" style="border-color:rgba(250,247,242,0.1);">
+      <div class="stat-item">
+        <span class="stat-value">61%</span>
+        <span class="stat-label" style="color:rgba(250,247,242,0.4);">of SaaS companies use usage-based pricing in some form (2023)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">59%</span>
+        <span class="stat-label" style="color:rgba(250,247,242,0.4);">expect usage revenue to grow as a share of total (2025)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">1–3%</span>
+        <span class="stat-label" style="color:rgba(250,247,242,0.4);">of revenue typically lost to under-billing without proper metering</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">38%</span>
+        <span class="stat-label" style="color:rgba(250,247,242,0.4);">higher YoY growth reported by usage-based companies vs. fixed-price</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article">
+
+<!-- ===================== CHAPTER 5 ===================== -->
+<section class="chapter" id="ch5">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">V</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">Revenue Recognition</div>
+      <h2 class="chapter-title">When Did You Really Earn That Money?</h2>
+      <p class="chapter-subtitle">ASC 606, IFRS 15, and the five-step model that governs how every software company on earth records revenue.</p>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div class="body-text">
+      <p>Here is a question that sounds philosophical but is actually worth billions of dollars: <em>when did you earn the money?</em></p>
+      <p>A customer pays you $120,000 upfront for a year of software. The wire hits your bank account on January 1st. Did you make $120,000 in January? Under Generally Accepted Accounting Principles, the answer is <strong>no</strong>. You made $10,000 in January. You will make $10,000 in February, and March, and so on until December. The other $110,000 sits on your balance sheet as a <strong>liability</strong> called deferred revenue — money you've received but haven't yet earned, because you haven't delivered the service yet.</p>
+      <p>This is the core principle of <strong>revenue recognition</strong>, codified in the United States as <strong>ASC 606</strong> and internationally as <strong>IFRS 15</strong>. Both standards were introduced around 2018 and were, for many software companies, the most disruptive accounting change in a generation.</p>
+      <p>The key insight is this: <em>revenue is earned by fulfilling obligations, not by receiving cash</em>. The obligation for SaaS is usually the ongoing provision of a service — which means you recognize revenue continuously, as the service is delivered.</p>
+    </div>
+    <div>
+      <div class="diagram reveal" style="padding:2rem;">
+        <div class="diagram-label">ASC 606 / IFRS 15</div>
+        <div class="diagram-title" style="font-size:1rem;">The Five-Step Model</div>
+        <div class="timeline">
+          <div class="timeline-item highlight">
+            <div class="timeline-year">Step 1</div>
+            <div class="timeline-event">Identify the Contract</div>
+            <div class="timeline-detail">Establish that a valid agreement exists with commercial substance and collectability.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Step 2</div>
+            <div class="timeline-event">Identify Performance Obligations</div>
+            <div class="timeline-detail">What distinct promises did you make? Software access, implementation, support may each be separate obligations.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Step 3</div>
+            <div class="timeline-event">Determine Transaction Price</div>
+            <div class="timeline-detail">Total consideration, including variable amounts like usage overages (estimate or recognize as incurred).</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Step 4</div>
+            <div class="timeline-event">Allocate to Obligations</div>
+            <div class="timeline-detail">Divide the price among obligations based on their Standalone Selling Price (SSP).</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Step 5</div>
+            <div class="timeline-event">Recognize as Earned</div>
+            <div class="timeline-detail">Record revenue as each obligation is fulfilled — over time for subscriptions, at a point for one-time deliverables.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout reveal" id="callout-asc606-hard">
+    <p>A simple annual subscription is manageable. But SaaS contracts rarely stay simple. A customer upgrades mid-year, adding a new module. They negotiate a discount in exchange for a multi-year commitment. They buy professional services bundled with the software. Each of these events triggers what ASC 606 calls a <strong>contract modification</strong> — and modifications require you to reallocate the transaction price across all obligations, potentially retroactively adjusting previously recognized revenue.</p>
+    <p>Manual spreadsheets break immediately under this logic. <strong>Automated revenue recognition software</strong> — built into platforms like Zuora RevPro, Maxio, Chargebee, and Sage Intacct — is not a luxury. It is a compliance requirement for any company that wants to survive an audit.</p>
+  </div>
+
+  <div class="body-text reveal" style="margin-top: 2rem;">
+    <p>The practical consequence engineers need to understand: <strong>billing and revenue recognition are not the same thing</strong>. Billing is what you invoice the customer. Revenue recognition is what you record on your income statement. They can diverge significantly. An annual subscription billed upfront in January creates twelve months of recognized revenue. A usage-based customer billed monthly after the fact creates recognized revenue that exactly matches billing. A multi-year deal with variable usage requires continuous recalculation.</p>
+    <p>This is why the data model your billing system exports to your accounting system matters enormously. If your billing platform doesn't have clean deferred revenue tracking and contract modification handling, your finance team will be living in spreadsheets at month-end — and your auditors will have questions.</p>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 6 ===================== -->
+<section class="chapter" id="ch6">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">VI</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">The Numbers That Matter</div>
+      <h2 class="chapter-title">Speaking Finance: The Metrics of Recurring Revenue</h2>
+      <p class="chapter-subtitle">MRR, ARR, NRR, churn, and the language that connects billing data to business health.</p>
+    </div>
+  </div>
+
+  <div class="body-text reveal">
+    <p>There is a vocabulary that emerges when billing data gets aggregated into business intelligence. Every engineer who works near billing will encounter these terms. Understanding them is the difference between being able to answer a question from your CFO and having to ask someone to translate.</p>
+  </div>
+
+  <div class="metrics-grid reveal">
+    <div class="metric-card">
+      <div class="metric-abbr">MRR</div>
+      <div class="metric-name">Monthly Recurring Revenue</div>
+      <div class="metric-formula">Σ (active subscriptions × monthly rate)</div>
+      <div class="metric-desc">The normalized monthly subscription revenue across all customers. The lifeblood number for subscription businesses.</div>
+      <div class="metric-benchmark">▸ Track components: New, Expansion, Contraction, Churned</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">ARR</div>
+      <div class="metric-name">Annual Recurring Revenue</div>
+      <div class="metric-formula">MRR × 12</div>
+      <div class="metric-desc">The annualized view. Preferred for investor conversations, board decks, and fundraising. Smooths out monthly noise.</div>
+      <div class="metric-benchmark">▸ $5M ARR unlocks meaningfully higher valuation multiples</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">NRR</div>
+      <div class="metric-name">Net Revenue Retention</div>
+      <div class="metric-formula">(Start + Expansion − Contraction − Churn) ÷ Start</div>
+      <div class="metric-desc">The most important health metric. Above 100% means you grow without adding customers. A compounding growth engine.</div>
+      <div class="metric-benchmark">▸ Best-in-class: 120%+ (Snowflake historic: 150%+)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">GRR</div>
+      <div class="metric-name">Gross Revenue Retention</div>
+      <div class="metric-formula">(Start − Churn − Contraction) ÷ Start</div>
+      <div class="metric-desc">NRR without expansion. Caps at 100%. The purest measure of whether customers are staying. High NRR can hide low GRR.</div>
+      <div class="metric-benchmark">▸ Best-in-class enterprise: 90%+</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">Churn</div>
+      <div class="metric-name">Revenue Churn Rate</div>
+      <div class="metric-formula">MRR Lost ÷ Starting MRR × 100</div>
+      <div class="metric-desc">Revenue lost from cancellations and downgrades. The enemy of the subscription model. Comes in two flavors: voluntary and involuntary.</div>
+      <div class="metric-benchmark">▸ Involuntary churn (failed payments): 10–30% of total</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">LTV</div>
+      <div class="metric-name">Customer Lifetime Value</div>
+      <div class="metric-formula">ARPU × Gross Margin ÷ Churn Rate</div>
+      <div class="metric-desc">The total revenue a customer will generate. The numerator in the LTV:CAC ratio that investors scrutinize.</div>
+      <div class="metric-benchmark">▸ Healthy LTV:CAC ratio: 3:1 or better</div>
+    </div>
+  </div>
+
+  <div class="two-col reveal" style="margin-top: 2rem;">
+    <div class="body-text">
+      <p>Two of these metrics are worth dwelling on, because engineers tend to misunderstand them.</p>
+      <p><strong>NRR above 100% is the holy grail of SaaS.</strong> It means your existing customers spend more over time than you lose to churn. You get compounding revenue growth from a fixed set of customers. Companies like Snowflake and Datadog built their valuations on this property — not just by acquiring customers but by having each customer grow their consumption year after year.</p>
+      <p><strong>Involuntary churn</strong> is the churn you cause by accident. A credit card expires. A payment fails. Dunning is the automated process of recovering these customers before they're lost. It is a highly optimized engineering problem: the sequence of retry attempts, the timing, the message tone, the number of reminder emails — all of it affects how much revenue you recover. Stripe's AI-powered retry system claims to recover $6.5B in otherwise-lost revenue annually. That number alone should end any argument about whether "billing infrastructure" matters.</p>
+    </div>
+    <div>
+      <div class="pull-quote reveal">
+        <p>Losing $5,000 in revenue to an expired credit card is not a finance problem. It is a product problem. It means your system did not notice in time, or did not communicate clearly enough, or did not make updating a card easy enough.</p>
+        <cite>The engineering lens on involuntary churn</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 7 ===================== -->
+<section class="chapter" id="ch7">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">VII</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">Global Tax Compliance</div>
+      <h2 class="chapter-title">Every Country Wants a Piece</h2>
+      <p class="chapter-subtitle">VAT, GST, sales tax, digital services taxes — and why billing internationally is a compliance minefield.</p>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div class="body-text">
+      <p>Suppose your software company is based in San Francisco and you have customers in Germany, Australia, Brazil, and Japan. When you invoice those customers, you do not simply send a bill and wait for payment. You are also responsible for calculating, collecting, and remitting the correct indirect tax — VAT, GST, or sales tax — to the tax authority of each jurisdiction where your customer is located.</p>
+      <p>There are over 14,000 separate tax jurisdictions in the United States alone. Globally, more than 110 countries now require non-resident digital service providers to collect VAT or GST on sales to their residents. The rules differ everywhere — on rates, on thresholds, on what counts as a digital service, on how customer location is determined.</p>
+      <p>This did not used to be so complex. For decades, tax followed the seller's location. The digital economy broke that logic: a company in California can serve a million EU customers without a single employee on the continent. The EU responded in 2015 with rules requiring digital service providers to charge VAT at the customer's local rate. The US followed with state-level economic nexus rules. Country by country, the world has been tightening compliance.</p>
+      <p>The EU is now implementing <strong>ViDA (VAT in the Digital Age)</strong>, the most ambitious VAT overhaul in decades. By 2030, it will require mandatory e-invoicing and real-time digital reporting for all cross-border B2B transactions in the EU. The era of "I'll sort out the VAT later" is ending.</p>
+    </div>
+    <div>
+      <div class="aside-box reveal" id="aside-tax-models">
+        <div class="aside-label">Tax Model Choices</div>
+        <h4>Three Ways to Handle Global Tax</h4>
+        <p><strong>DIY + Tax API:</strong> Integrate Avalara or Vertex into your billing system. They calculate correct rates in real time. You still own registration, filing, and remittance in each jurisdiction. Appropriate for companies with in-house tax expertise.</p>
+        <p><strong>Tax Automation Platform:</strong> Anrok (SaaS-native), Quaderno, TaxJar, Sphere. These go further — monitoring nexus thresholds, handling registration, automating filings. Better fit as you expand to more jurisdictions.</p>
+        <p><strong>Merchant of Record (MoR):</strong> Paddle or FastSpring become the legal seller. They handle everything — calculation, collection, registration, filing. You receive net revenue. You lose some control and margin but dramatically reduce operational complexity. Favored by developer tools and indie SaaS expanding internationally.</p>
+      </div>
+      <div class="callout reveal" id="callout-vida" style="margin-top:1.5rem;">
+        <div class="callout-label">What EU ViDA Means for Engineers</div>
+        <p>Starting from 2025–2030 in phases: cross-border B2B invoices in the EU must be <strong>structured digital documents</strong> (XML or similar), not PDFs, with real-time or near-real-time reporting to tax authorities. If your invoicing system generates PDFs and emails them, it will need to change.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 8 ===================== -->
+<section class="chapter" id="ch8">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">VIII</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">The Industry Landscape</div>
+      <h2 class="chapter-title">A Map of the Tools</h2>
+      <p class="chapter-subtitle">The platforms that power billing across the industry — what they do, who they're for, and how they fit together.</p>
+    </div>
+  </div>
+
+  <div class="body-text reveal">
+    <p>The billing software market is a constellation of overlapping tools, each strong in a different part of the problem. No single platform is perfect for every stage of company growth or every pricing model. Understanding the landscape means understanding which category of problem you are trying to solve.</p>
+  </div>
+
+  <div class="platform-grid reveal">
+    <div class="platform-card">
+      <div class="platform-category">CPQ</div>
+      <div class="platform-name">Salesforce Revenue Cloud</div>
+      <div class="platform-desc">The dominant enterprise CPQ. Deep CRM integration. Handles complex approval workflows and contract management. Heavy implementation.</div>
+      <span class="platform-tier tier-enterprise">Enterprise</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Subscription Billing</div>
+      <div class="platform-name">Zuora</div>
+      <div class="platform-desc">The original "subscription economy" platform. Strong revenue recognition (RevPro), global scale. Complex to implement; acquired Togai (2024) for usage metering.</div>
+      <span class="platform-tier tier-enterprise">Enterprise</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Subscription Billing</div>
+      <div class="platform-name">Chargebee</div>
+      <div class="platform-desc">Strong for growth-stage SaaS. Handles subscriptions, usage overages, revenue recognition, dunning. 20,000+ businesses. Starts at $599/month.</div>
+      <span class="platform-tier tier-smb">SMB–Mid</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">SaaS Finance Ops</div>
+      <div class="platform-name">Maxio</div>
+      <div class="platform-desc">Formerly SaaSOptics + Chargify. Strong at B2B SaaS financial operations: billing, ASC 606, MRR/ARR reporting. Finance-team-centric.</div>
+      <span class="platform-tier tier-smb">Mid-Market</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Usage Metering</div>
+      <div class="platform-name">Metronome (Stripe)</div>
+      <div class="platform-desc">Acquired by Stripe (2024). High-scale usage-based billing for enterprise. Built for billions of usage events. Strong for complex multi-dimensional pricing.</div>
+      <span class="platform-tier tier-enterprise">Enterprise</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Usage Billing</div>
+      <div class="platform-name">Orb</div>
+      <div class="platform-desc">API-first platform built for usage billing complexity. Decouples pricing logic from data. Strong developer experience. Increasingly popular with AI companies.</div>
+      <span class="platform-tier tier-devfirst">Dev-First</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Developer Billing</div>
+      <div class="platform-name">Stripe Billing</div>
+      <div class="platform-desc">Best starting point for developer-first teams already on Stripe. Good for simple-to-moderate complexity. 0.7% of billing volume (pay-as-you-go plan).</div>
+      <span class="platform-tier tier-devfirst">Dev-First</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Open Source Billing</div>
+      <div class="platform-name">Lago</div>
+      <div class="platform-desc">Open-source billing engine. Full code access. Used by Mistral, Groq. Good for teams that want control, hate vendor lock-in, and have engineering bandwidth.</div>
+      <span class="platform-tier tier-devfirst">Open Source</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Usage Rating</div>
+      <div class="platform-name">m3ter</div>
+      <div class="platform-desc">"Connective tissue" between CRM and ERP for mid-to-large companies. Metering and rating infrastructure designed to plug into existing Salesforce/NetSuite stacks.</div>
+      <span class="platform-tier tier-enterprise">Enterprise</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Entitlement Management</div>
+      <div class="platform-name">Schematic / Stigg</div>
+      <div class="platform-desc">Dedicated entitlement layers that sit between your billing system and your product. Real-time feature access control without coupling entitlements to engineering deploys.</div>
+      <span class="platform-tier tier-specialized">Specialized</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Tax Compliance</div>
+      <div class="platform-name">Avalara / Anrok</div>
+      <div class="platform-desc">Avalara: the enterprise standard for tax automation. Anrok: purpose-built for SaaS companies, monitoring nexus thresholds across all jurisdictions.</div>
+      <span class="platform-tier tier-specialized">Specialized</span>
+    </div>
+    <div class="platform-card">
+      <div class="platform-category">Merchant of Record</div>
+      <div class="platform-name">Paddle / FastSpring</div>
+      <div class="platform-desc">Become the seller of record. You receive net revenue; they handle all global tax compliance. Ideal for developer tools expanding internationally without a tax team.</div>
+      <span class="platform-tier tier-specialized">Compliance</span>
+    </div>
+  </div>
+
+  <div class="callout reveal" id="callout-how-to-choose" style="margin-top: 2rem;">
+    <p><strong>Early stage, simple pricing:</strong> Stripe Billing or Chargebee. Low friction, fast setup, handles the basics well.</p>
+    <p><strong>Usage-based, growing fast:</strong> Orb or Metronome. Purpose-built for metering at scale.</p>
+    <p><strong>B2B SaaS with finance team and audit needs:</strong> Maxio or Chargebee with revenue recognition add-on.</p>
+    <p><strong>Enterprise with complex contracts:</strong> Zuora or Salesforce Revenue Cloud. Accept the 6–9 month implementation timeline.</p>
+    <p><strong>Want control, have engineering:</strong> Lago (open source) or build on Stripe Billing primitives.</p>
+    <p><strong>Expanding internationally without a tax team:</strong> Paddle or FastSpring as MoR.</p>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-ornament">✦</div></div>
+
+<!-- ===================== CHAPTER 9 ===================== -->
+<section class="chapter" id="ch9">
+  <div class="chapter-header reveal">
+    <div class="chapter-number">IX</div>
+    <div class="chapter-title-group">
+      <div class="chapter-kicker">The Future</div>
+      <h2 class="chapter-title">Where the Money Machine Is Going</h2>
+      <p class="chapter-subtitle">AI pricing, agentic software, outcome-based models, and the end of the seat.</p>
+    </div>
+  </div>
+
+  <div class="two-col reveal">
+    <div class="body-text">
+      <p>The billing world is in the middle of the most interesting transformation it has ever seen, and the engine is artificial intelligence.</p>
+      <p>The core problem is this: <strong>AI changes what a user is</strong>. Traditional SaaS pricing assumes that the thing doing work is a human — and humans have a natural unit of measure (a seat). When an AI agent can do the work of ten humans, seats become an absurd way to measure value. You need a new unit.</p>
+      <p>The industry is feeling its way toward answers. Most AI companies have landed on <strong>usage-based models</strong> for now — tokens, API calls, compute hours. These are explainable and measurable, which matters more than it might seem. A finance team approving a $200,000 AI contract needs to understand what they're paying for.</p>
+      <p>The direction of travel, though, is toward <strong>activity-based and outcome-based pricing</strong>. Zendesk charges $1.50 per AI-resolved customer support ticket. ServiceNow offers efficiency guarantees. The logic is compelling: customers should pay for results, not for resources. The challenge is engineering: you have to measure outcomes reliably, attribute them correctly, and do so at low enough latency that billing can follow.</p>
+      <p>Bessemer Venture Partners recently published research crystallizing the tension: the charge metric you pick is not just a billing decision — it is a statement about what you believe your AI is worth, and what you are willing to stake your margins on to prove it.</p>
+    </div>
+    <div>
+      <div class="aside-box reveal" id="aside-ai-pricing">
+        <h4>How AI Companies Are Pricing Today</h4>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">Most Common</div>
+            <div class="timeline-event">Tokens / Compute</div>
+            <div class="timeline-detail">Per API call, per token, per GPU-hour. Clear, measurable. Technical buyers understand. Non-technical buyers often confused.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Growing</div>
+            <div class="timeline-event">Credits</div>
+            <div class="timeline-detail">Pre-purchase a bucket. Normalizes volatile compute costs. Gives customer spend control. Creates upfront cash. Often opaque.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">Emerging</div>
+            <div class="timeline-event">Activity-Based</div>
+            <div class="timeline-detail">Per task completed, per workflow run. Better value alignment than raw compute. Requires reliable task definition.</div>
+          </div>
+          <div class="timeline-item highlight">
+            <div class="timeline-year">The Goal</div>
+            <div class="timeline-event">Outcome-Based</div>
+            <div class="timeline-detail">Per resolved ticket, per qualified lead, per dollar saved. Still rare. Requires unambiguous outcomes, short attribution, and trust.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body-text reveal" style="margin-top: 2rem;">
+    <p>There is a countervailing pressure worth noting. AI model costs are deflating fast — far faster than most pricing strategies anticipate. In 2023, training a frontier model cost roughly $100M. By early 2025, comparable capability was achievable for $5M. The commodity trajectory is already visible. Companies that price primarily on compute will face margin pressure as underlying costs fall. The companies that will thrive are those that charge for value — outcomes, time saved, revenue generated — rather than for the resources consumed.</p>
+    <p>The longer-term infrastructure changes are also significant. <strong>Composable billing architectures</strong> — where pricing logic, metering, invoicing, and entitlements are separate services connected by APIs — are replacing monolithic platforms. This mirrors the broader software industry's move to microservices, and it creates the same tradeoff: more flexibility, more operational complexity, more to understand. <strong>AI-native billing systems</strong> that can parse contracts, auto-configure pricing plans, and predict usage anomalies are appearing. The monthly close that once took a finance team a week will take an hour.</p>
+    <p>And the regulatory environment will only intensify. ViDA in the EU, nexus rules expanding in new US states, digital services taxes proliferating globally. The compliance burden for a global software company in 2030 will make today's look simple. The winners will be companies that built their billing infrastructure as a serious engineering discipline — not as a spreadsheet they hoped to fix someday.</p>
+  </div>
+
+  <div class="pull-quote reveal" style="max-width:680px;margin-top:3rem;">
+    <p>The companies that master usage-based billing will capture more value from their products while building stronger customer relationships through fair, transparent pricing that aligns with actual value delivered.</p>
+    <cite>Metronome, The Usage-Based Billing Playbook, 2025</cite>
+  </div>
+</section>
+
+<!-- CODA -->
+<section class="chapter" style="padding-top: 3rem; padding-bottom: 8rem;">
+  <div class="visual-rule"></div>
+  <div class="body-text reveal" style="margin: 3rem auto 0; max-width: 680px;">
+    <p>Back to our engineer from the opening. They have now built the spreadsheet, broken it, and rebuilt it. They have had two customers threaten to churn over billing disputes. They have spent a night fixing a proration bug that was double-charging upgrades. They have apologized to the CFO for month-end numbers that didn't match what Salesforce reported.</p>
+    <p>They are, in other words, ready to understand billing.</p>
+    <p>What they know now — what every engineer who has lived through this knows — is that billing is not a problem you solve once. It is a system you tend. It is the place where every commercial promise your company makes eventually arrives, demanding to be made precise. It is the infrastructure on which your customer relationships, your investor story, and your regulatory standing all rest simultaneously.</p>
+    <p>The engineers who understand it deeply are rare. The companies that treat it as a discipline rather than a chore are rarer still. And that, more than any particular platform choice or pricing model, is the advantage worth having.</p>
+  </div>
+  <div class="section-rule" style="margin-top:5rem;max-width:680px;">
+    <div class="section-rule-ornament">— fin —</div>
+  </div>
+</section>
+
+</div><!-- /article -->
+
+<footer>
+  <div class="footer-title">The Money Machine</div>
+  <p>A Technical Masterclass in Software Billing, Licensing, and Consumption Models</p>
+  <p style="margin-top:1rem;opacity:0.4;">Research compiled 2025–2026 · For educational purposes</p>
+</footer>
+
+<!-- AUDIO PLAYER -->
+<div id="audio-player" role="region" aria-label="Audio narration">
+  <button class="ap-play-btn" id="apPlayBtn" onclick="togglePlayPause()" aria-label="Play">
+    <svg id="apPlayIcon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </button>
+  <div class="ap-info">
+    <div class="ap-title" id="apTitle">Listening…</div>
+    <div class="ap-progress-bar"><div class="ap-progress-fill" id="apFill"></div></div>
+    <div class="ap-time" id="apTime">0:00 / 22:00</div>
+  </div>
+  <button class="ap-speed-btn" id="apSpeedBtn" onclick="cycleSpeed()">1×</button>
+  <button class="ap-close-btn" onclick="closeAudio()" aria-label="Close player">✕</button>
+</div>
+
+<script>
+// ---- Progress bar ----
+window.addEventListener('scroll', function() {
+  var scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress').style.width = scrolled + '%';
+}, { passive: true });
+
+// ---- Scroll reveal ----
+var reveals = document.querySelectorAll('.reveal');
+var revealObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry, i) {
+    if (entry.isIntersecting) {
+      setTimeout(function() { entry.target.classList.add('visible'); }, i * 50);
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+reveals.forEach(function(el) { revealObserver.observe(el); });
+
+// ---- Stage navigation dots ----
+var sections = ['cover','ch1','ch2','ch3','ch4','ch5','ch6','ch7','ch8','ch9'];
+var dots = document.querySelectorAll('.stage-dot');
+var sectionObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      var idx = sections.indexOf(entry.target.id);
+      if (idx >= 0) dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) sectionObserver.observe(el);
+});
+dots.forEach(function(dot, i) {
+  dot.addEventListener('click', function() {
+    var el = document.getElementById(sections[i]);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ---- TTS / Audio narration ----
+var TTS = window.speechSynthesis;
+var TOTAL_MINS = 22;
+var ttsActive = false;
+var ttsPaused = false;
+var ttsChunks = [];
+var ttsIdx = 0;
+var ttsHighlighted = null;
+var ttsSpeed = 1;
+var speeds = [1, 1.25, 1.5, 0.85];
+var speedIdx = 0;
+var ttsStartTime = null;
+var ttsElapsed = 0;
+var ttsTimer = null;
+
+function buildChunks() {
+  var selectors = [
+    '.lede p',
+    '.body-text p',
+    '.aside-box p',
+    '.callout p',
+    '.pull-quote p',
+    '.chapter-title',
+    '.chapter-subtitle',
+    '.timeline-event',
+    '.timeline-detail',
+    '.metric-name',
+    '.metric-desc',
+    '.platform-name',
+    '.platform-desc',
+  ];
+  var nodes = [];
+  selectors.forEach(function(sel) {
+    document.querySelectorAll(sel).forEach(function(el) {
+      if (!nodes.includes(el)) nodes.push(el);
+    });
+  });
+  nodes.sort(function(a, b) {
+    return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+  });
+  return nodes;
+}
+
+function checkTTSSupport() {
+  if (!TTS) {
+    var btn = document.getElementById('listenBtn');
+    if (btn) { btn.classList.add('no-tts'); btn.title = 'Text-to-speech not supported in this browser'; }
+  }
+}
+
+function formatTime(secs) {
+  var m = Math.floor(secs / 60);
+  var s = Math.floor(secs % 60);
+  return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function updateProgress() {
+  if (!ttsActive || ttsPaused) return;
+  ttsElapsed = (Date.now() - ttsStartTime) / 1000;
+  var total = TOTAL_MINS * 60 / ttsSpeed;
+  var pct = Math.min((ttsElapsed / total) * 100, 100);
+  document.getElementById('apFill').style.width = pct + '%';
+  document.getElementById('apTime').textContent = formatTime(ttsElapsed) + ' / ' + formatTime(TOTAL_MINS * 60);
+  ttsTimer = requestAnimationFrame(updateProgress);
+}
+
+function speakChunk(idx) {
+  if (idx >= ttsChunks.length) { stopAudio(); return; }
+  ttsIdx = idx;
+  var node = ttsChunks[idx];
+
+  if (ttsHighlighted) ttsHighlighted.classList.remove('reading-highlight');
+  node.classList.add('reading-highlight');
+  ttsHighlighted = node;
+  try { node.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+
+  var chapter = node.closest('[id^="ch"]');
+  var chTitle = chapter ? chapter.querySelector('.chapter-title') : null;
+  var titleText = chTitle ? chTitle.textContent.trim() : '';
+  document.getElementById('apTitle').textContent = titleText ? titleText.slice(0, 40) + '…' : 'Listening…';
+
+  var utt = new SpeechSynthesisUtterance(node.textContent.trim());
+  utt.rate = ttsSpeed;
+  utt.pitch = 1;
+  utt.lang = 'en-US';
+
+  var voices = TTS.getVoices();
+  var preferred = voices.find(function(v) {
+    return v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Daniel') || (v.lang === 'en-US' && v.localService);
+  });
+  if (preferred) utt.voice = preferred;
+
+  utt.onend = function() { if (ttsActive && !ttsPaused) speakChunk(idx + 1); };
+  utt.onerror = function() { if (ttsActive) speakChunk(idx + 1); };
+  TTS.speak(utt);
+}
+
+function updateListenBtnState(active) {
+  var btn = document.getElementById('listenBtn');
+  if (!btn) return;
+  if (active) {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round" aria-hidden="true"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/></svg> Stop';
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg> Listen';
+  }
+}
+
+function toggleAudio() {
+  if (!TTS) return;
+  if (!ttsActive) { startAudio(); } else { closeAudio(); }
+}
+
+function startAudio() {
+  ttsActive = true;
+  ttsPaused = false;
+  ttsChunks = buildChunks();
+  ttsIdx = 0;
+  ttsStartTime = Date.now();
+  ttsElapsed = 0;
+
+  document.getElementById('audio-player').classList.add('visible');
+  updateListenBtnState(true);
+  setPauseIcon();
+  TTS.cancel();
+  speakChunk(0);
+  ttsTimer = requestAnimationFrame(updateProgress);
+}
+
+function togglePlayPause() {
+  if (!ttsActive) return;
+  if (ttsPaused) {
+    ttsPaused = false;
+    ttsStartTime = Date.now() - (ttsElapsed * 1000);
+    TTS.resume();
+    setPauseIcon();
+    ttsTimer = requestAnimationFrame(updateProgress);
+  } else {
+    ttsPaused = true;
+    TTS.pause();
+    cancelAnimationFrame(ttsTimer);
+    setPlayIcon();
+  }
+}
+
+function stopAudio() {
+  ttsActive = false;
+  ttsPaused = false;
+  TTS.cancel();
+  cancelAnimationFrame(ttsTimer);
+  if (ttsHighlighted) { ttsHighlighted.classList.remove('reading-highlight'); ttsHighlighted = null; }
+  document.getElementById('apFill').style.width = '0%';
+  document.getElementById('apTime').textContent = '0:00 / 22:00';
+  document.getElementById('apTitle').textContent = 'Listening…';
+  updateListenBtnState(false);
+  setPlayIcon();
+}
+
+function closeAudio() {
+  stopAudio();
+  document.getElementById('audio-player').classList.remove('visible');
+}
+
+function cycleSpeed() {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  ttsSpeed = speeds[speedIdx];
+  document.getElementById('apSpeedBtn').textContent = ttsSpeed + '×';
+  if (ttsActive && !ttsPaused) {
+    TTS.cancel();
+    ttsStartTime = Date.now() - (ttsElapsed * 1000);
+    speakChunk(ttsIdx);
+  }
+}
+
+function setPlayIcon() {
+  document.getElementById('apPlayIcon').innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  document.getElementById('apPlayBtn').setAttribute('aria-label', 'Play');
+}
+function setPauseIcon() {
+  document.getElementById('apPlayIcon').innerHTML = '<line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/>';
+  document.getElementById('apPlayBtn').setAttribute('aria-label', 'Pause');
+}
+
+window.addEventListener('load', function() {
+  checkTTSSupport();
+  if (TTS) TTS.getVoices(); // preload voices in Chrome
+});
+window.addEventListener('beforeunload', function() { if (TTS) TTS.cancel(); });
+</script>
+
+<!-- DEEP LINK SYSTEM -->
+<script>
+(function() {
+  var LINK_ICON = '<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>';
+
+  var ANCHOR_LABELS = {
+    'ch1': 'I. The Fundamental Problem',
+    'ch2': 'II. Licensing Models',
+    'ch3': 'III. Quote-to-Cash',
+    'ch4': 'IV. Usage Metering',
+    'ch5': 'V. Revenue Recognition',
+    'ch6': 'VI. SaaS Metrics',
+    'ch7': 'VII. Global Tax',
+    'ch8': 'VIII. Platform Landscape',
+    'ch9': 'IX. The Future',
+    'aside-three-eras': 'Sidebar: The Three Eras',
+    'aside-entitlement': 'Sidebar: Anatomy of a License',
+    'aside-cpq': 'Sidebar: CPQ Explained',
+    'callout-proration': 'Callout: Proration',
+    'aside-metering-stack': 'Sidebar: The Metering Stack',
+    'callout-asc606-hard': 'Callout: Why ASC 606 Is Hard',
+    'aside-tax-models': 'Sidebar: Tax Model Choices',
+    'callout-vida': 'Callout: EU ViDA',
+    'callout-how-to-choose': 'Callout: How to Choose a Platform',
+    'aside-ai-pricing': 'Sidebar: AI Pricing Ladder',
+  };
+
+  function makeAnchorLink(id) {
+    var a = document.createElement('a');
+    a.className = 'anchor-link';
+    a.href = '#' + id;
+    a.setAttribute('aria-label', 'Copy link to this section');
+    a.setAttribute('title', 'Copy link');
+    a.innerHTML = LINK_ICON;
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      try { history.replaceState(null, '', '#' + id); lastHash = '#' + id; } catch(err) {}
+      var url = window.location.href.split('#')[0] + '#' + id;
+      var showCopied = function() {
+        a.classList.add('copied');
+        a.setAttribute('title', 'Copied!');
+        setTimeout(function() {
+          a.classList.remove('copied');
+          a.setAttribute('title', 'Copy link');
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(showCopied).catch(showCopied);
+      } else {
+        showCopied();
+      }
+    });
+    return a;
+  }
+
+  function addAnchorToChapter(section) {
+    var id = section.id;
+    if (!id || !id.startsWith('ch')) return;
+    section.classList.add('anchor-target');
+    var titleGroup = section.querySelector('.chapter-title-group');
+    if (!titleGroup) return;
+    var title = titleGroup.querySelector('.chapter-title');
+    if (!title) return;
+    var row = document.createElement('div');
+    row.className = 'chapter-title-row';
+    title.parentNode.insertBefore(row, title);
+    row.appendChild(title);
+    row.appendChild(makeAnchorLink(id));
+  }
+
+  function addAnchorToBox(el) {
+    var id = el.id;
+    if (!id) return;
+    el.classList.add('anchor-target');
+    var h4 = el.querySelector('h4');
+    if (!h4) return;
+    var row = document.createElement('div');
+    row.className = 'linkable-header';
+    h4.parentNode.insertBefore(row, h4);
+    row.appendChild(h4);
+    row.appendChild(makeAnchorLink(id));
+  }
+
+  function initAnchors() {
+    document.querySelectorAll('section[id^="ch"], div[id^="ch"]').forEach(addAnchorToChapter);
+    document.querySelectorAll('.aside-box[id], .callout[id]').forEach(addAnchorToBox);
+  }
+
+  function handleHashOnLoad() {
+    var hash = window.location.hash.slice(1);
+    if (!hash) return;
+    setTimeout(function() {
+      var target = document.getElementById(hash);
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() { target.classList.add('anchor-flash'); }, 400);
+      setTimeout(function() { target.classList.remove('anchor-flash'); }, 1800);
+    }, 300);
+  }
+
+  var hashScrollTimer = null;
+  var lastHash = window.location.hash;
+  var allAnchorIds = Object.keys(ANCHOR_LABELS);
+
+  function updateHashOnScroll() {
+    clearTimeout(hashScrollTimer);
+    hashScrollTimer = setTimeout(function() {
+      try {
+        var viewportMid = window.scrollY + window.innerHeight * 0.3;
+        var current = null;
+        allAnchorIds.forEach(function(id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= viewportMid) current = id;
+        });
+        var newHash = current ? '#' + current : '';
+        if (newHash !== lastHash) {
+          lastHash = newHash;
+          history.replaceState(null, '', newHash || window.location.pathname);
+        }
+      } catch(e) {}
+    }, 250);
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    initAnchors();
+    handleHashOnLoad();
+    window.addEventListener('scroll', updateHashOnScroll, { passive: true });
+  });
+})();
+</script>
+
+</body>
+</html>
